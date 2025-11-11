@@ -4,7 +4,17 @@ Maschinery is a pure Python console application for organizing Maschine Expansio
 
 ## Compatibility
 
-Only official Maschine Expansions from Native Instruments have been verifying. Third-party expansions should work too, as long as they follow the exact same format as the official expansions.
+### Operational Systems
+
+This project targets Windows, macOS, and Linux.
+
+### Maschine Expansions
+
+Only official Maschine Expansions from Native Instruments have been verified. Third-party expansions should work too, as long as they follow the exact same format as the official expansions.
+
+### DAWs, Samplers, and Drum Machines
+
+The organized WAV files are still regular audio files. Maschinery's processes are non-destructive and their sole purpose is to make your Maschine Expansions easier to navigate and import into tools other than Maschine.
 
 ## Usage
 
