@@ -53,6 +53,8 @@ def main() -> int:
 
     export_wav_samples(expansions, args.output, args.kits, args.move)
 
+    print(f"\n{'Kits' if args.kits else 'Libraries'} have been exported to \"{args.output}\".")
+
     print("\nDone!")
 
     return 0
