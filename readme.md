@@ -28,7 +28,7 @@ Binaries are provided as a convenience. A Python 3 installation is not required 
 
 ## Features
 
-Currently, Maschinery suppports these modes:
+Currently, Maschinery supports these modes:
 
 - Libraries (default): WAV files are organized per Expansion and per sound categories (e.g. "D:/SoundLibs/Maschinery/Crate Cuts/Drums/Kick/Kick April Showers.wav").
 - Groups: WAV files are organized per Expansion and per Group (e.g. "D:/SoundLibs/Maschinery/Crate Cuts/April Showers/Kick April Showers.wav").
