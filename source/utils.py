@@ -30,7 +30,7 @@ def get_expansions_from_path(search_dir: Path | str) -> list["MaschineExpansion"
     # TODO: the operations below are not optimized - not necessarily a problem, but something to watch out for.
 
     for mxgrp_file in search_dir.rglob(f"*.{MaschineGroup.get_file_format()}"):  # Find .mxgrp files (recursive)
-        for parent_dir in mxgrp_file.parents:  # Add the top-level directory under root that contains the file
+        for parent_dir in mxgrp_file.parents:  # Add the top-level directory under the root that contains the file
             if parent_dir.parent == search_dir:  # Stop once we reach a direct child of the root
                 if parent_dir.name not in expansions:
                     expansions[parent_dir.name] = MaschineExpansion(parent_dir)
@@ -48,7 +48,7 @@ def get_expansions_from_path(search_dir: Path | str) -> list["MaschineExpansion"
 
 def find_path_case_insensitive(path: Path):
     """
-    Return the real path on disk, ignoring case, or None if not found.
+    Return the real path on disk, ignoring the case, or None if not found.
     :param path: The path to look for.
     :return: The real path on disk, ignoring case, or None if not found.
     """
@@ -66,15 +66,15 @@ def find_path_case_insensitive(path: Path):
     return None
 
 
-def export_wav_samples(expansions: list["MaschineExpansion"], output: Path, kits: bool = False, move: bool = False):
+def export_wav_samples(expansions: list["MaschineExpansion"], output: Path, groups: bool = False, move: bool = False):
     """
     Exports all WAV samples associated with the specified Maschine expansions.
     :param expansions: The Maschine Expansions to export WAV samples from.
     :param output: The path where the WAV samples will be exported.
-    :param kits: Whether to export WAVs in folders representing Maschine Groups rather than sample type (e.g. Kick).
+    :param groups: Whether to export WAVs in folders representing Maschine Groups rather than sample types (e.g. Kick).
     :param move: Whether to move the original WAVs rather than copying them.
     """
-    if not kits:
+    if not groups:
         for expansion in expansions:
             for sample in expansion.samples:
                 sample_output = output / expansion.name / sample.subdir.replace("Samples/", "")

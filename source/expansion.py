@@ -15,7 +15,7 @@ class MaschineExpansion(MaschineObject):
         """
         Initialization.
         :param path: The path to this Maschine Expansion directory.
-        :param groups: The groups containing within this expansion.
+        :param groups: The groups contained within this expansion.
         """
         assert path.is_dir()
         super().__init__(path)

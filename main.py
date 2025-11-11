@@ -24,10 +24,10 @@ def main() -> int:
                         help="set path to dir containing Maschine Expansions (e.g. \"Crate Cuts Library\")")
     parser.add_argument("-o", "--output", required=True, type=str,
                         help="set output path (where to create a \"Maschinery\" folder with the WAV exports inside)")
-    parser.add_argument("-k", "--kits", action="store_true",
-                        help="export WAVs in folders representing Maschine Groups rather than sample type (e.g. Kick) ")
+    parser.add_argument("-g", "--groups", action="store_true",
+                        help="export WAVs to folders representing Maschine Groups rather than sample types")
     parser.add_argument("-m", "--move", action="store_true",
-                        help="export WAVs in folders representing Maschine Groups rather than sample type (e.g. Kick) ")
+                        help="move WAV files rather than copying them - USE WITH CAUTION")
 
     args = parser.parse_args()
 
@@ -37,7 +37,7 @@ def main() -> int:
 
     print(f"Input Path: {args.input}")
     print(f"Output Path: {args.output}")
-    print(f"Export Mode: {"Library" if args.kits is False else "Kits"}")
+    print(f"Export Mode: {'Libraries' if not args.groups else 'Groups'}")
 
     print("\nProcessing input paths. This may take a minute...")
 
@@ -51,9 +51,9 @@ def main() -> int:
     args.output = Path(args.output) / "Maschinery"
     args.output.mkdir(parents=True, exist_ok=True)
 
-    export_wav_samples(expansions, args.output, args.kits, args.move)
+    export_wav_samples(expansions, args.output, args.groups, args.move)
 
-    print(f"\n{'Kits' if args.kits else 'Libraries'} have been exported to \"{args.output}\".")
+    print(f"\n{'Groups' if args.groups else 'Libraries'} have been exported to \"{args.output}\".")
 
     print("\nDone!")
 
