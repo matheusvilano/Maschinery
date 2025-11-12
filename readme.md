@@ -42,4 +42,4 @@ Maschinery is also *planning* to support the following modes:
 A couple of examples of running Maschinery:
 
 - Export with Libraries mode: `maschinery -i "D:/SoundLibs/NativeInstruments" -o "D:/SoundLibs/Maschinery"`
-- Export with Groups mode: `maschinery` -i "D:/SoundLibs/NativeInstruments" -o "D:/DrumKits/Maschinery" -g`
+- Export with Groups mode: `maschinery -i "D:/SoundLibs/NativeInstruments" -o "D:/DrumKits/Maschinery" -g`
