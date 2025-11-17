@@ -30,6 +30,11 @@ class MaschineExpansion(MaschineObject):
         return str(self)
 
     @property
+    def name(self) -> str:
+        """:return: The name of the object."""
+        return self.path.name.rstrip(" Library").rstrip(" library")
+
+    @property
     def samples(self) -> list[MaschineSample]:
         """:return: All the WAV samples contained in this expansion. Fetched from all groups."""
         return [sample for group in self.groups for sample in group.samples]

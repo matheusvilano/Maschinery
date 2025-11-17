@@ -43,7 +43,7 @@ class MaschineObject:
     @property
     def name(self) -> str:
         """:return: The name of the object."""
-        return self.path.name.rstrip(" Library")
+        return self.path.name
 
     @property
     def stem(self) -> str:

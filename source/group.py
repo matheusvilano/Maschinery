@@ -32,7 +32,7 @@ class MaschineGroup(MaschineObject):
     @property
     def name(self) -> str:
         """:return: The name of this Maschine object."""
-        return self.path.stem.rstrip(" Kit")
+        return self.path.stem.rstrip(" Kit").rstrip(" kit")
 
     @staticmethod
     def get_file_format() -> Literal["mxgrp"]:
