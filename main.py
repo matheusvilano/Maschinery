@@ -9,7 +9,7 @@ from source.expansion import MaschineExpansion
 from source.modes import EMode
 from source.utils import get_expansions_from_path, export_wav_samples
 
-_VERSION = "0.1.1"
+_VERSION = "0.2.0"
 
 
 def main() -> int:
