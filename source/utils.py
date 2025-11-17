@@ -6,6 +6,8 @@ from re import compile as re_compile
 from shutil import copy2 as sh_copy, move as sh_move
 from typing import TYPE_CHECKING
 
+from source.modes import EMode
+
 if TYPE_CHECKING:
     from source.expansion import MaschineExpansion
 
@@ -31,17 +33,18 @@ def get_expansions_from_path(search_dir: Path | str) -> list["MaschineExpansion"
 
     for mxgrp_file in search_dir.rglob(f"*.{MaschineGroup.get_file_format()}"):  # Find .mxgrp files (recursive)
         for parent_dir in mxgrp_file.parents:  # Add the top-level directory under the root that contains the file
-            if parent_dir.parent == search_dir:  # Stop once we reach a direct child of the root
-                if parent_dir.name not in expansions:
-                    expansions[parent_dir.name] = MaschineExpansion(parent_dir)
-                group = MaschineGroup(mxgrp_file)
-                with open(mxgrp_file, "rb") as mxgrp_io:
-                    wav_pattern = re_compile(r"(?i)Samples(?:/[\w\s().,'!&-]+)+/[\w\s().,'!&-]+\.wav")
-                    mxgrp_str = mxgrp_io.read().decode("utf-8", errors="ignore")
-                    group_samples = [MaschineSample(parent_dir / sample_subdir)
-                                     for sample_subdir in wav_pattern.findall(mxgrp_str)]
-                    group.samples.update(group_samples)
-                expansions[parent_dir.name].groups.add(group)
+            if parent_dir != search_dir:  # Stop once we reach a direct child of the root
+                continue
+            if parent_dir.name not in expansions:
+                expansions[parent_dir.name] = MaschineExpansion(parent_dir)
+            group = MaschineGroup(mxgrp_file)
+            with open(mxgrp_file, "rb") as mxgrp_io:
+                wav_pattern = re_compile(r"(?i)Samples(?:/[\w\s().,'!&-]+)+/[\w\s().,'!&-]+\.wav")
+                mxgrp_str = mxgrp_io.read().decode("utf-8", errors="ignore")
+                group_samples = [MaschineSample(parent_dir / sample_subdir)
+                                 for sample_subdir in wav_pattern.findall(mxgrp_str)]
+                group.samples.update(group_samples)
+            expansions[parent_dir.name].groups.add(group)
 
     return list(expansions.values())
 
@@ -66,30 +69,36 @@ def find_path_case_insensitive(path: Path):
     return None
 
 
-def export_wav_samples(expansions: list["MaschineExpansion"], output: Path, groups: bool = False, move: bool = False):
+def export_wav_samples(expansions: list["MaschineExpansion"], output: Path, mode: EMode = EMode.LIBRARIES,
+                       move: bool = False):
     """
     Exports all WAV samples associated with the specified Maschine expansions.
     :param expansions: The Maschine Expansions to export WAV samples from.
     :param output: The path where the WAV samples will be exported.
-    :param groups: Whether to export WAVs in folders representing Maschine Groups rather than sample types (e.g. Kick).
+    :param mode: Whether to export WAVs in folders representing Maschine Groups rather than sample types (e.g. Kick).
     :param move: Whether to move the original WAVs rather than copying them.
     """
-    if not groups:
-        for expansion in expansions:
-            for sample in expansion.samples:
-                sample_output = output / expansion.name / sample.subdir.replace("Samples/", "")
-                sample_output.parent.mkdir(parents=True, exist_ok=True)
-                if move:
-                    sh_move(sample.path, sample_output)
-                else:
-                    sh_copy(sample.path, sample_output)
-    else:
-        for expansion in expansions:
-            for group in expansion.groups:
-                for sample in group.samples:
-                    sample_output = output / expansion.name / group.name / sample.name
+    match mode:
+        case EMode.LIBRARIES:
+            for expansion in expansions:
+                for sample in expansion.samples:
+                    sample_output = output / expansion.name / sample.subdir.replace("Samples/", "")
                     sample_output.parent.mkdir(parents=True, exist_ok=True)
                     if move:
                         sh_move(sample.path, sample_output)
                     else:
                         sh_copy(sample.path, sample_output)
+        case EMode.GROUPS:
+            for expansion in expansions:
+                for group in expansion.groups:
+                    for sample in group.samples:
+                        sample_output = output / expansion.name / group.name / sample.name
+                        sample_output.parent.mkdir(parents=True, exist_ok=True)
+                        if move:
+                            sh_move(sample.path, sample_output)
+                        else:
+                            sh_copy(sample.path, sample_output)
+        case EMode.KITS:
+            raise NotImplementedError("Kits mode not yet implemented.")
+        case _:
+            raise ValueError(f"Invalid export mode specified: \"{mode}\".")
